@@ -1,0 +1,44 @@
+---
+title: "BST 222 Homework 7"
+author: "Jonathan Waring, Selena Huang, Laura Levin-Gleba, Wenze Tang"
+date: "November 12, 2018"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Exponential Distribution
+
+- The **exponential distribution** is the probability distribution that describes the time between events in a Poisson point process. 
+- Exponential variables can be used to model situations where certain events occur with a constant probability per unit length, such as the distance between mutations on a DNA strand
+- The probability density function (PDF) of an exponential distribution is given by $$f(x; \lambda) = \begin{cases}\lambda e^{-\lambda x} & x \geq 0 \\ 0 & x < 0 \end{cases}$$ where $\lambda > 0$ is the parameter of the distribution, often called the *rate parameter*
+
+## Exponential PDF
+
+```{r PDF}
+library(ggplot2)
+library(plyr)
+library(latex2exp)
+theme_set(theme_bw())
+
+exponential <- function(lambda, x) {
+  data.frame(x = x, value = lambda * exp(-lambda * x))
+}
+
+params <- expand.grid(lambda = c(0.5, 1, 1.5, 2))
+pdfs <- mdply(params, exponential, x = seq(0,4, length=250))
+ggplot(pdfs, aes(x, value, color=factor(lambda))) +
+  geom_path() + 
+  ylab(TeX("$f(x; \\lambda) = \\lambda e^{-\\lambda x} $")) + 
+  labs(color=TeX("$\\lambda$"))
+```
+
+## Properties of $X \sim Exp(\lambda)$
+
+- The **expected value** of  $X$ is given by $$E[X] = \frac{1}{\lambda}$$
+- The **variance** of $X$ is given by $$Var[X] = \frac{1}{\lambda^2}$$
+- The **median** of $X$ is given by $$m[X] = \frac{\ln (2)}{\lambda}$$
+
+
