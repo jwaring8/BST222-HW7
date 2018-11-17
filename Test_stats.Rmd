@@ -1,0 +1,117 @@
+---
+title: "Test Statistics"
+author: "Selena Huang"
+date: '2018-11-17'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Hypothesis Testing for $\lambda_1$ vs. $\lambda_2$
+
+$X \sim exp (\lambda_1), Y \sim exp(\lambda_2)$ 
+
+Testing $H_0: \lambda_1 = \lambda_2$, vs. $H_1: \lambda_1 \neq \lambda_2$
+
+<br>
+
+## Wald Test 
+
+Let $\theta = \lambda_1 - \lambda_2$, then the test becomes: $H_0: \theta = 0$ vs. $H_1: \theta \neq 0$
+
+The MLE for $\lambda$ is $\hat{\lambda} = \frac{n}{\sum_{i=1}^{n} x_i} = \frac{1}{\bar{x}}$
+The variance of $\hat{\lambda}$ was shown previously to be: $Var(\hat{\lambda}) = \frac{\lambda^2}{n}$
+
+Under regularlity conditions of the MLE,
+
+$$
+\hat{\lambda} \sim N(\lambda, \frac{\lambda^2}{n})
+$$
+
+Therefore,
+
+$$
+\hat{\theta} = \hat{\lambda}_1 - \hat{\lambda}_2\\
+E(\hat{\theta} ) = \frac{1}{\bar{x}} - \frac{1}{\bar{y}}
+$$
+As X and Y are iid:
+
+$$
+Var(\hat{\theta}) = \frac{\hat{\lambda_1^2}}{n_1} + \frac{\hat{\lambda_2^2}}{n_2} = \frac{1}{n_1 {\bar{x}}^2} + \frac{1}{n_2 {\bar{y}}^2}
+$$
+The Wald test statistic is:
+
+$$
+T = \frac{\frac{1}{\bar{x}} - \frac{1}{\bar{y}}}{\sqrt{\frac{1}{n_1 {\bar{x}}^2} + \frac{1}{n_2 {\bar{y}}^2}}} \sim N(0,1) \\
+T^2 \sim \chi^2_1
+$$
+
+<br>
+
+## Likelihood Ratio Test
+
+Under $H_0$, we can create a pooled $\lambda_0 = \frac{n_1+n_2}{n_1 {\bar{x}} + n_2 {\bar{y}}}$
+
+$$
+\mathbb{L}_{H_0} =  \prod_{i=1}^{n_1} \lambda_0 e^{-\lambda_0 x_i} \prod_{i=1}^{n_2} \lambda_0 e^{-\lambda_0 y_i} \\
+\mathbb{L}_{H_0} = \lambda_0 ^{n_1+n_2} e^{-\lambda_0(n_1\bar{x} + n_2\bar{y})}
+$$
+$$
+\mathbb{L}_{H_1} =  \prod_{i=1}^{n_1} \lambda_1 e^{-\lambda_1 x_i} \prod_{i=1}^{n_2} \lambda_2 e^{-\lambda_2 y_i} \\
+\mathbb{L}_{H_1} = \lambda_1 ^{n_1} \lambda_2 ^{n_2} e^{-\lambda_1 n_1\bar{x} - \lambda_2 n_2\bar{y}}
+$$
+$$
+\mathbb{LR} = \frac{\mathbb{L}_{H_1}}{\mathbb{L}_{H_0}} = \frac{\lambda_1 ^{n_1} \lambda_2 ^{n_2} e^{-\lambda_1 n_1\bar{x} - \lambda_2 n_2\bar{y}}}{\lambda_0 ^{n_1+n_2} e^{-\lambda_0(n_1\bar{x} + n_2\bar{y})}}
+$$
+$$
+log(\mathbb{LR}) = n_1 log\lambda_1 + n_2log\lambda_2 - n_1\lambda_1\bar(x) - n_2\lambda_2\bar{y} - n_1log\lambda_0 - n_2log\lambda_0 + \lambda_0(n_1\bar{x} + n_2\bar{y})
+$$
+$$
+log(\mathbb{LR}) = n_1 log\frac{1}{\bar{x}} + n_2log\frac{1}{\bar{y}} - n_1\frac{1}{\bar{x}}\bar{x} - n_2\frac{1}{\bar{y}}\bar{y} - (n_1+n_2)log\frac{n_1+n_2}{n_1 {\bar{x}} + n_2 {\bar{y}}} + \frac{n_1+n_2}{n_1 {\bar{x}} + n_2 {\bar{y}}}(n_1 {\bar{x}} + n_2 {\bar{y}})
+$$
+
+The LRT test statistic is:
+
+$$
+2log(\mathbb{LR}) = 2n_1 log\frac{1}{\bar{x}} + 2n_2log\frac{1}{\bar{y}} - 2(n_1+n_2)log\frac{n_1+n_2}{n_1 {\bar{x}} + n_2 {\bar{y}}} \sim \chi^2_1
+$$
+
+<br>
+
+## Score Test
+
+Let $e^{\theta} = \frac{\lambda_2}{\lambda_1}$, then ${\theta = log\frac{\lambda_2}{\lambda_1}}$, $\lambda_2 = \lambda_1 e^{\theta}$. Let $\lambda_1 = \lambda$. Then our hypothesis test becomes:
+
+$H_0: \theta = 0$ vs. $H_1: \theta \neq 0$
+
+$$
+\mathbb{L}(\theta, \lambda) = \prod_{i=1}^{n_1} \lambda e^{-\lambda x_i} \prod_{i=1}^{n_2} \lambda e^{\theta} e^{-\lambda e^{\theta} y_i}
+$$
+
+$$
+log(\mathbb{L}(\theta, \lambda)) = n_1log\lambda - \lambda \sum_{i=1}^{n_1}x_i + n_2log\lambda + n_2\theta - \lambda e^{\theta}\sum_{i=1}^{n_2}y_i
+$$
+
+$$
+\mathbb{U}(\theta) = n_2 - \lambda e^{\theta}\sum_{i=1}^{n_2}y_i
+$$
+
+Evaluated under $H_0$, $\mathbb{U} = n_2-\hat{\lambda}n_2\bar{y}$
+
+Under the $H_0$, the $\lambda$ can be pooled $\hat{\lambda} = \frac{n_1+n_2}{n_1 {\bar{x}} + n_2 {\bar{y}}}$
+
+The $Var(\mathbb{U})$ under the $H_0$ is:
+
+$$
+Var(\mathbb{U}_0) = \frac{\sum_{i=1}^{n_1}x_i \sum_{i=1}^{n_2}y_i}{(\sum_{i=1}^{n_1}x_i + \sum_{i=1}^{n_2}y_i)^2}(n_1+n_2) = \frac{n_1\bar{x}n_2\bar{y}(n_1+n_2)}{(n_1\bar{x}+n_2\bar{y})^2}
+$$
+The score statistics is:
+
+$$
+\mathbb{S} = \frac{(n_2 - \frac{n_2\bar{y}(n_1+n_2)}{n_1\bar{x}+n_2\bar{y}})^2}{\frac{n_1\bar{x}n_2{y}(n_1+n_2)}{(n_1\bar{x}+n_2\bar{y})^2}} \sim \chi^2_1
+$$
+
+
