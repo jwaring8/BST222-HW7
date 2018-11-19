@@ -1,0 +1,7 @@
+base
+ggplot2
+plyr
+latex2exp
+gridExtra
+tidyr
+dplyr
