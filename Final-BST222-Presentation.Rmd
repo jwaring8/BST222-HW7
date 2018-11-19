@@ -318,7 +318,7 @@ MOM <- data.frame(t(MOM))
 
 MOMp1<- ggplot(data=MOM, aes(x=X1)) +
   geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +  
-  labs(title="MOM, n=10", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
+  labs(title="MOMs, n=10", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
   geom_vline(xintercept = 1.2, col="firebrick1")
 
 MOMp2<- ggplot(data=MOM, aes(x=X2)) +
@@ -396,7 +396,7 @@ $$
 
 - Score Test
 $$
-\small S = \frac{(n_2 - \frac{n_2\bar{y}(n_1+n_2)}{n_1\bar{x}+n_2\bar{y}})^2}{\frac{n_1\bar{x}n_2{y}(n_1+n_2)}{(n_1\bar{x}+n_2\bar{y})^2}} \stackrel{approx}{\sim} \chi^2_1
+\small S = \frac{(n_2 - \frac{n_2\bar{y}(n_1+n_2)}{n_1\bar{x}+n_2\bar{y}})^2}{\frac{n_1\bar{x}n_2 \bar{y}(n_1+n_2)}{(n_1\bar{x}+n_2\bar{y})^2}} \stackrel{approx}{\sim} \chi^2_1
 $$
 
 ## Which Hypthesis Test is Best?
