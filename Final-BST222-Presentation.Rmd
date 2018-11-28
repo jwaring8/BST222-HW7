@@ -49,7 +49,7 @@ ggplot(pdfs, aes(x, value, color=factor(lambda))) +
 - We compare these estimators based on the following criteria: 
     - Bias: $Bias[\hat{\lambda}] = E[\hat{\lambda}] - \lambda$
     - Mean Squared Error (MSE): $MSE[\hat{\lambda}] = Var(\hat{\lambda}) + Bias(\hat{\lambda})^2$
-    - Consistiency: $\lim\limits_{n \to \infty} \hat{\lambda}_n = \lambda$
+    - Consistency: $\lim\limits_{n \to \infty} \hat{\lambda}_n = \lambda$
     
 ##Bias and MSE
 - MLE 
@@ -65,7 +65,7 @@ Since there is no closed-form expression for the expectation and variance of $\h
 
 ##Bias and MSE of Each Estimator
 ```{r echo=FALSE, warning=FALSE, comment=FALSE, message=FALSE, cache=TRUE}
-n <- c(10, 100, 1000, 10000)
+n <- c(50, 100, 1000, 10000)
 lambdas <- seq(0.01,5,by=0.2)
 num_sims <- 1000
 
@@ -111,7 +111,7 @@ biasMLE<-rbind(biasMLE,lambdas)
 tbiasMLE<-t(biasMLE)
 colnames(tbiasMLE)<-c(n,"lambda")
 
-tbiasMLE_L <- gather(as.data.frame(tbiasMLE), sampleN, bias, "10":"10000", factor_key=TRUE)
+tbiasMLE_L <- gather(as.data.frame(tbiasMLE), sampleN, bias, "50":"10000", factor_key=TRUE)
 
 
   ##calculate MSE for all different true parameter lambda for MOM
@@ -125,7 +125,10 @@ mseMLE<-rbind(mseMLE,lambdas)
 tmseMLE<-t(mseMLE)
 colnames(tmseMLE)<-c(n,"lambda")
 
-tmseMLE_L <- gather(as.data.frame(tmseMLE), sampleN, mse, "10":"10000", factor_key=TRUE)
+tmseMLE_L <- gather(as.data.frame(tmseMLE), sampleN, mse, "50":"10000", factor_key=TRUE)
+
+
+
 
 
 #MOM
@@ -169,7 +172,7 @@ biasMOM<-rbind(biasMOM,lambdas)
 tbiasMOM<-t(biasMOM)
 colnames(tbiasMOM)<-c(n,"lambda")
 
-tbiasM_L <- gather(as.data.frame(tbiasMOM), sampleN, bias, "10":"10000", factor_key=TRUE)
+tbiasM_L <- gather(as.data.frame(tbiasMOM), sampleN, bias, "50":"10000", factor_key=TRUE)
 
 
   ##calculate MSE for all different true parameter lambda for MOM
@@ -183,7 +186,7 @@ mseM<-rbind(mseM,lambdas)
 tmseM<-t(mseM)
 colnames(tmseM)<-c(n,"lambda")
 
-tmseM_L <- gather(as.data.frame(tmseM), sampleN, mse, "10":"10000", factor_key=TRUE)
+tmseM_L <- gather(as.data.frame(tmseM), sampleN, mse, "50":"10000", factor_key=TRUE)
 
 
 #ME
@@ -227,7 +230,7 @@ biasME<-rbind(biasME,lambdas)
 tbiasME<-t(biasME)
 colnames(tbiasME)<-c(n,"lambda")
 
-tbiasME_L <- gather(as.data.frame(tbiasME), sampleN, bias, "10":"10000", factor_key=TRUE)
+tbiasME_L <- gather(as.data.frame(tbiasME), sampleN, bias, "50":"10000", factor_key=TRUE)
 
   ##calculate MSE for all different true parameter lambda for MOM
 mseME=matrix(nrow=length(n), ncol=length(lambdas))
@@ -240,133 +243,47 @@ mseME<-rbind(mseME,lambdas)
 tmseME<-t(mseME)
 colnames(tmseME)<-c(n,"lambda")
 
-tmseME_L <- gather(as.data.frame(tmseME), sampleN, mse, "10":"10000", factor_key=TRUE)
+tmseME_L <- gather(as.data.frame(tmseME), sampleN, mse, "50":"10000", factor_key=TRUE)
 
 
 #plot all
 biasMLEp <- ggplot(tbiasMLE_L, aes(x=lambda, y=bias, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="MLE Bias", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="MLE Bias", color="Sample Size") +
+  ylim(0,0.2)
 
 mseMLEp <- ggplot(tmseMLE_L, aes(x=lambda, y=mse, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="MLE MSE", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="MLE MSE", color="Sample Size") +
+  ylim(0,1)
+
 
 biasMOMp <- ggplot(tbiasM_L, aes(x=lambda, y=bias, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="2MOM Bias", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="2MOM Bias", color="Sample Size") +
+  ylim(0,0.2)
+
 
 mseMOMp <- ggplot(tmseM_L, aes(x=lambda, y=mse, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="2MOM MSE", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="2MOM MSE", color="Sample Size") +
+  ylim(0,1)
+
 
 biasMEp <- ggplot(tbiasME_L, aes(x=lambda, y=bias, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="ME Bias", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("Bias($\\hat{\\lambda}$)"), title="ME Bias", color="Sample Size") +
+  ylim(0,0.2)
+
 
 mseMEp <- ggplot(tmseME_L, aes(x=lambda, y=mse, color=sampleN, group= sampleN)) +
   geom_point()+ geom_line()+
-  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="ME MSE", color="Sample Size")
+  labs(x=TeX("$\\lambda$"), y=TeX("MSE($\\hat{\\lambda}$)"), title="ME MSE", color="Sample Size") +
+  ylim(0,1)
+
 
 
 grid.arrange(biasMLEp,mseMLEp,biasMOMp,mseMOMp,biasMEp,mseMEp,ncol=2)
-```
-
-## Estimator Distributions and Consistiency 
-```{r echo=FALSE, warning=FALSE, comment=FALSE, message=FALSE, cache=TRUE}
-n <- c(10, 100, 1000, 10000)
-lambda <- 1.2
-num_sims <- 1000
-
-
-#MLE
-MLEs <- matrix(data = NA, length(n), num_sims)
-for (i in 1:length(n)){
-  for (j in 1:num_sims) {
-    MLEs[[i,j]] <- 1/mean(rexp(n[i], lambda))
-  }
-}
-MLEs <- data.frame(t(MLEs))
-p1<- ggplot(data=MLEs, aes(x=X1)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +
-  labs(title="MLEs, n=10", x=TeX("$\\hat{\\lambda}_{MLE}"), y="Frequency")+
-   geom_vline(xintercept = 1.2, col="firebrick1")
-p2<- ggplot(data=MLEs, aes(x=X2)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +
-  labs(title="MLEs, n=100", x=TeX("$\\hat{\\lambda}_{MLE}"), y="Frequency")+
-  geom_vline(xintercept = 1.2, col="firebrick1")
-p3<- ggplot(data=MLEs, aes(x=X3)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +
-  labs(title="MLEs, n=1000", x=TeX("$\\hat{\\lambda}_{MLE}"), y="Frequency")+
-   geom_vline(xintercept = 1.2, col="firebrick1")
-p4<- ggplot(data=MLEs, aes(x=X4)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +
-  labs(title="MLEs, n=10000", x=TeX("$\\hat{\\lambda}_{MLE}"), y="Frequency")+
-  geom_vline(xintercept = 1.2, col="firebrick1")
-
-
-##MOM
-MOM <- matrix(data = NA, length(n), num_sims)
-
-for (i in 1:length(n)){
-  for (j in 1:num_sims) {
-    MOM[[i,j]] <- sqrt(2*n[i]/(sum((rexp(n[i], lambda)^2))))
-  }
-}
-
-MOM <- data.frame(t(MOM))
-
-MOMp1<- ggplot(data=MOM, aes(x=X1)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +  
-  labs(title="MOMs, n=10", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
-  geom_vline(xintercept = 1.2, col="firebrick1")
-
-MOMp2<- ggplot(data=MOM, aes(x=X2)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) + 
-  labs(title="MOMs, n=100", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
-   geom_vline(xintercept = 1.2, col="firebrick1")
-
-MOMp3<- ggplot(data=MOM, aes(x=X3)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +   
-  labs(title="MOMs, n=1000", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
- geom_vline(xintercept = 1.2, col="firebrick1")
-
-MOMp4<- ggplot(data=MOM, aes(x=X4)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +  
-  labs(title="MOMs, n=10000", x=TeX("$\\hat{\\lambda}_{2MOM}"), y="Frequency") +
- geom_vline(xintercept = 1.2, col="firebrick1")
-##ME
-ME <- matrix(data = NA, length(n), num_sims)
-
-for (i in 1:length(n)){
-  for (j in 1:num_sims) {
-        ME[i,j] <- log(2)/median(rexp(n[i], lambda))
-  }
-}
-
-ME <- data.frame(t(ME))
-
-MEp1<- ggplot(data=ME, aes(x=X1)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +  
-  labs(title="MEs, n=10", x=TeX("$\\hat{\\lambda}_{ME}"), y="Frequency") +
-geom_vline(xintercept = 1.2, col="firebrick1")
-
-MEp2<- ggplot(data=ME, aes(x=X2)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) + 
-  labs(title="MEs, n=100", x=TeX("$\\hat{\\lambda}_{ME}"), y="Frequency") +
-    geom_vline(xintercept = 1.2, col="firebrick1")
-
-MEp3<- ggplot(data=ME, aes(x=X3)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +   
-  labs(title="MEs, n=1000", x=TeX("$\\hat{\\lambda}_{ME}"), y="Frequency") +
- geom_vline(xintercept = 1.2, col="firebrick1")
-
-MEp4<- ggplot(data=ME, aes(x=X4)) +
-  geom_histogram(color="black", fill="dodgerblue", alpha = 0.7, bins=15) +  
-  labs(title="MEs, n=10000", x=TeX("$\\hat{\\lambda}_{ME}"), y="Frequency") +
-geom_vline(xintercept = 1.2, col="firebrick1")
-
-grid.arrange(p1,p2,p3,p4,MOMp1,MOMp2,MOMp3,MOMp4,MEp1,MEp2,MEp3,MEp4, ncol=4)
 ```
 
 ## Summary of Estimators
@@ -399,7 +316,7 @@ $$
 \small S = \frac{(n_2 - \frac{n_2\bar{y}(n_1+n_2)}{n_1\bar{x}+n_2\bar{y}})^2}{\frac{n_1\bar{x}n_2 \bar{y}(n_1+n_2)}{(n_1\bar{x}+n_2\bar{y})^2}} \stackrel{approx}{\sim} \chi^2_1
 $$
 
-## Which Hypthesis Test is Best?
+## Which Hypothesis Test is Best?
 Ideally, the test will reject the null hypothesis **0%** of the time when the null is true and **100%** of the time when the alternative is true. How close is each test to this ideal? 
 
 ## Method
